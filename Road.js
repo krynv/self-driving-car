@@ -13,6 +13,10 @@ class Road {
         this.bottom = infinity;
     }
 
+    getLaneCenter(laneIndex) {
+        const laneWidth = this.width / this.laneCount;
+        return this.left + laneWidth / 2 + laneWidth * laneIndex;
+    }
 
     draw(ctx) {
         ctx.lineWidth = 5;
