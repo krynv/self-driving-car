@@ -19,11 +19,11 @@ class Car {
         this.controls = new Controls(controlType);
     }
 
-    draw(ctx) {
+    draw(ctx, colour) {
         if (this.damaged) {
             ctx.fillStyle = "gray";
         } else {
-            ctx.fillStyle = "black";
+            ctx.fillStyle = colour;
         }
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
