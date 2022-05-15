@@ -51,6 +51,7 @@ class Sensor {
     }
 
     #getReading(ray, roadBorders, traffic) {
+        const { getIntersection } = require('../utils');
         let touches = [];
 
         for (let i = 0; i < roadBorders.length; i++) {
@@ -90,6 +91,8 @@ class Sensor {
     }
 
     #castRays() {
+        const { lerp } = require('../utils');
+
         this.rays = [];
         for (let i = 0; i < this.rayCount; i++) {
             const rayAngle = lerp(
@@ -109,3 +112,5 @@ class Sensor {
         }
     }
 }
+
+module.exports = Sensor;

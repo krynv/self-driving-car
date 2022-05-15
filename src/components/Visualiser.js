@@ -1,5 +1,6 @@
 class Visualiser {
     static drawNetwork(ctx, network) {
+        const { lerp } = require('../utils');
         const margin = 50;
         const left = margin;
         const top = margin;
@@ -30,6 +31,7 @@ class Visualiser {
     }
 
     static drawLevel(ctx, level, left, top, width, height, outputLabels) {
+        const { getRGBA } = require('../utils');
         const right = left + width;
         const bottom = top + height;
 
@@ -99,6 +101,7 @@ class Visualiser {
     }
 
     static #getNodeX(nodes, index, left, right) {
+        const { lerp } = require('../utils');
         return lerp(
             left,
             right,
@@ -108,3 +111,5 @@ class Visualiser {
         );
     }
 }
+
+module.exports = Visualiser;

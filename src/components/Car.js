@@ -1,3 +1,7 @@
+const Sensor = require('./Sensor');
+const NeuralNetwork = require('./NeuralNetwork');
+const Controls = require('./Controls');
+
 class Car {
     constructor(x, y, width, height, controlType, maxSpeed = 3) {
         this.x = x;
@@ -22,46 +26,8 @@ class Car {
         this.controls = new Controls(controlType);
     }
 
-    draw(ctx, colour, drawSensor = false) {
-        if (this.damaged) {
-            ctx.fillStyle = "gray";
-        } else {
-            ctx.fillStyle = colour;
-        }
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-        for (let i = 1; i < this.polygon.length; i++) {
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
-
-        if (this.sensor && drawSensor) {
-            this.sensor.draw(ctx);
-        }
-    }
-
-    update(roadBorders, traffic) {
-        if (!this.damaged) {
-            this.#move();
-            this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders, traffic);
-        }
-
-        if (this.sensor) {
-            this.sensor.update(roadBorders, traffic);
-            const offsets = this.sensor.readings.map(s => s === null ? 0 : 1 - s.offset);
-            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
-
-            if (this.brain) {
-                this.controls.forward = outputs[0];
-                this.controls.left = outputs[1];
-                this.controls.right = outputs[2];
-                this.controls.reverse = outputs[3];
-            }
-        }
-    }
-
     #assessDamage(roadBorders, traffic) {
+        const { polysIntersect } = require('../utils');
         for (let i = 0; i < roadBorders.length; i++) {
             if (polysIntersect(this.polygon, roadBorders[i])) {
                 return true;
@@ -141,4 +107,45 @@ class Car {
         this.x -= Math.sin(this.angle) * this.speed;
         this.y -= Math.cos(this.angle) * this.speed;
     }
+
+    draw(ctx, colour, drawSensor = false) {
+        if (this.damaged) {
+            ctx.fillStyle = "gray";
+        } else {
+            ctx.fillStyle = colour;
+        }
+        ctx.beginPath();
+        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+        for (let i = 1; i < this.polygon.length; i++) {
+            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+        }
+        ctx.fill();
+
+        if (this.sensor && drawSensor) {
+            this.sensor.draw(ctx);
+        }
+    }
+
+    update(roadBorders, traffic) {
+        if (!this.damaged) {
+            this.#move();
+            this.polygon = this.#createPolygon();
+            this.damaged = this.#assessDamage(roadBorders, traffic);
+        }
+
+        if (this.sensor) {
+            this.sensor.update(roadBorders, traffic);
+            const offsets = this.sensor.readings.map(s => s === null ? 0 : 1 - s.offset);
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+
+            if (this.brain) {
+                this.controls.forward = outputs[0];
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.reverse = outputs[3];
+            }
+        }
+    }
 }
+
+module.exports = Car;

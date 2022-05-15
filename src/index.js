@@ -1,29 +1,40 @@
-const generateCars = N => {
-    const cars = [];
+const { appendChild, generateCars, save, discard } = require('./utils');
+const { Road, NeuralNetwork, Car, Visualiser } = require('./components');
 
-    for (let i = 0; i <= N; i++) {
-        cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, "AI"));
-    }
-
-    return cars;
-};
-
-
-const carCanvas = document.getElementById('carCanvas');
+const carCanvas = document.createElement('canvas');
+carCanvas.id = 'carCanvas';
 carCanvas.width = 200;
 
-const networkCanvas = document.getElementById('networkCanvas');
+const networkCanvas = document.createElement('canvas');
+networkCanvas.id = 'networkCanvas';
 networkCanvas.width = 300;
+
+const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
+const cars = generateCars(100, road);
+
+let bestCar = cars[0];
+
+const buttonContainer = document.createElement('div');
+buttonContainer.id = 'verticalButtons';
+
+const saveButton = document.createElement('button');
+saveButton.innerText = '💾';
+// saveButton.onclick = save(bestCar.brain);
+saveButton.onclick = function () { save(bestCar.brain) };
+
+const discardButton = document.createElement('button');
+discardButton.innerText = '🗑';
+discardButton.onclick = function () { discard() };
+
+buttonContainer.appendChild(saveButton);
+buttonContainer.appendChild(discardButton);
+
+appendChild(carCanvas);
+appendChild(buttonContainer);
+appendChild(networkCanvas);
 
 const carCtx = carCanvas.getContext('2d');
 const networkCtx = networkCanvas.getContext('2d');
-
-const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
-const N = 100;
-
-const cars = generateCars(N);
-
-let bestCar = cars[0];
 
 if (localStorage.getItem('bestBrain')) {
     for (let i = 0; i < cars.length; i++) {
@@ -34,15 +45,6 @@ if (localStorage.getItem('bestBrain')) {
         }
     }
 }
-
-const save = () => {
-    localStorage.setItem('bestBrain', JSON.stringify(bestCar.brain));
-};
-
-const discard = () => {
-    localStorage.removeItem('bestBrain');
-};
-
 
 const traffic = [
     new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),

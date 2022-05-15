@@ -20,7 +20,7 @@ class Road {
         this.borders = [
             [topLeft, bottomLeft],
             [topRight, bottomRight]
-        ]
+        ];
     }
 
     getLaneCenter(laneIndex) {
@@ -29,6 +29,8 @@ class Road {
     }
 
     draw(ctx) {
+        const { lerp } = require('../utils');
+
         ctx.lineWidth = 5;
         ctx.strokeStyle = "white";
 
@@ -53,3 +55,5 @@ class Road {
         });
     }
 }
+
+module.exports = Road;

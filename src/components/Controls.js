@@ -61,3 +61,5 @@ class Controls {
         }
     }
 }
+
+module.exports = Controls;

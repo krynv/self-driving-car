@@ -45,3 +45,5 @@ class Level {
         return level.outputs;
     }
 }
+
+module.exports = Level;

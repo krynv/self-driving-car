@@ -1,3 +1,5 @@
+const { Car } = require('../components');
+
 const lerp = (A, B, t) => A + (B - A) * t;
 
 const getIntersection = (A, B, C, D) => {
@@ -43,4 +45,37 @@ const getRGBA = value => {
     const G = R;
     const B = value > 0 ? 0 : 255;
     return "rgba(" + R + "," + G + "," + B + "," + alpha + ")";
+};
+
+const appendChild = (component) => {
+    document.body.appendChild(component);
+};
+
+const generateCars = (N, road) => {
+    const cars = [];
+
+    for (let i = 0; i <= N; i++) {
+        cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, "AI"));
+    }
+
+    return cars;
+};
+
+const save = bestCarBrain => {
+    localStorage.setItem('bestBrain', JSON.stringify(bestCarBrain));
+};
+
+const discard = () => {
+    localStorage.removeItem('bestBrain');
+};
+
+module.exports = {
+    lerp,
+    getIntersection,
+    polysIntersect,
+    getRGBA,
+    appendChild,
+    generateCars,
+    save,
+    discard
 }

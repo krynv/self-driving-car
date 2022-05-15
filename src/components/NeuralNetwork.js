@@ -1,3 +1,5 @@
+const Level = require('./Level');
+
 class NeuralNetwork {
     constructor(neuronCounts) {
         this.levels = [];
@@ -21,6 +23,7 @@ class NeuralNetwork {
     }
 
     static mutate(network, amount = 1) {
+        const { lerp } = require('../utils');
         network.levels.forEach(level => {
             for (let i = 0; i < level.biases.length; i++) {
                 level.biases[1] = lerp(level.biases[1], Math.random() * 2 - 1, amount);
@@ -33,3 +36,5 @@ class NeuralNetwork {
         });
     }
 }
+
+module.exports = NeuralNetwork;
